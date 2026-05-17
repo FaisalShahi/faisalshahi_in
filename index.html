@@ -404,7 +404,7 @@
           <p><i class="fas fa-envelope"></i> shahifaisal132@gmail.com</p>
         </div>
         <div class="contact-form">
-          <form id="contactForm" action="https://formsubmit.co/shahifaisal132@gmail.com" method="POST">
+          <form id="contactForm">
             <div class="form-group">
               <label for="name">Name</label>
               <input type="text" id="name" name="name" required />
@@ -418,9 +418,10 @@
               <textarea id="message" name="message" rows="5" required></textarea>
             </div>
             <button type="submit" class="btn">Send Message</button>
-            <input type="hidden" name="_subject" value="New Query from Portfolio Website">
+            <!-- <input type="hidden" name="_subject" value="New Query from Portfolio Website">
             <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
+            <input type="hidden" name="_template" value="table"> -->
+            <p id="formStatus"></p>
           </form>
         </div>
       </div>
@@ -440,6 +441,45 @@
       <p>&copy; 2025 Faisal Shahi. All rights reserved.</p>
     </div>
   </footer>
+  <script>
+    const form = document.getElementById("contactForm");
+    const status = document.getElementById("formStatus");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      status.innerText = "Sending...";
+
+      const formData = {
+        name: form.name.value,
+        email: form.email.value,
+        message: form.message.value,
+      };
+
+      try {
+        const response = await fetch("/api/contact", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          status.innerText = "Message sent successfully!";
+          form.reset();
+        } else {
+          status.innerText = "Failed to send message.";
+        }
+
+      } catch (error) {
+        status.innerText = "Something went wrong.";
+      }
+    });
+  </script>
+
   <script src="script.js"></script>
 
 </body>
